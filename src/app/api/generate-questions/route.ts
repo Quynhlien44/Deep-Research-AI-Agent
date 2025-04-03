@@ -16,7 +16,7 @@ const clarifyResearchGoals = async (topic: string) => {
     `
     try{
         const { text } = await generateText({
-            model: openrouter("/google/gemini-2.5-pro-exp-03-25:free"),
+            model: openrouter("google/gemini-2.0-pro-exp-02-05:free"),
             prompt,
           });
 

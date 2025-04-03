@@ -6,6 +6,7 @@ interface DeepResearchState {
     answers: string[],
     currentQuestion: number,
     isCompleted: boolean,
+    isLoading: boolean,
 }
 
 interface DeepResearchActions {
@@ -14,20 +15,19 @@ interface DeepResearchActions {
     setAnswers: (answers: string[]) => void,
     setCurrentQuestion: (index: number) => void,  
     setIsCompleted: (isCompleted: boolean) => void,
+    setIsLoading: (isLoading: boolean) => void,
+
 }
 
 const initialState: DeepResearchState = {
     topic: "",
-    questions: [
-        "questions one?",
-        "questions two?",
-        "questions three?",
-        "questions four?",
-    ],
+    questions: [],
     answers: [],
     currentQuestion: 0,
-    isCompleted: false
-}
+    isCompleted: false,
+    isLoading: false,
+ };
+
 
 export const useDeepResearchStore = create<DeepResearchState & DeepResearchActions>((set) => ({
     ...initialState,
@@ -36,4 +36,5 @@ export const useDeepResearchStore = create<DeepResearchState & DeepResearchActio
     setAnswers: (answers: string[]) => set({answers}),
     setCurrentQuestion: (currentQuestion: number) => set({currentQuestion}),
     setIsCompleted: (isCompleted: boolean) => set({isCompleted}),
+    setIsLoading: (isLoading: boolean) => set({isLoading}),
 }));
