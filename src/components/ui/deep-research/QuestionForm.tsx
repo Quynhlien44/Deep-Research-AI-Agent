@@ -26,7 +26,7 @@ const formSchema = z.object({
 
 const QuestionForm = () => {
 
-    const{questions, currentQuestion, answers, setCurrentQuestion, setAnswers, setIsCompleted, isLoading} = useDeepResearchStore()
+    const{questions, currentQuestion, answers, setCurrentQuestion, setAnswers, setIsCompleted, isLoading, isCompleted} = useDeepResearchStore()
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -39,26 +39,26 @@ const QuestionForm = () => {
       function onSubmit(values: z.infer<typeof formSchema>) {
         // Do something with the form values.
         // ✅ This will be type-safe and validated.
-        console.log(values)
-
-        const newAnswers = [...answers]
+        const newAnswers = [...answers];
         newAnswers[currentQuestion] = values.answer;
-        setAnswers(newAnswers);
+        setAnswers(newAnswers)
 
 
         if(currentQuestion < questions.length - 1){
           setCurrentQuestion(currentQuestion + 1);
-          form.reset();
+          form.reset()
         }else{
-          setIsCompleted(true);
+          setIsCompleted(true)
         }
 
       }
 
+      if(isCompleted) return;
+
       if(questions.length === 0) return;
 
   return (
-    <Card className='w-full max-w-[90vw] sm:max-w-[80vw] xl:max-w-[50vw] shadow-none'>
+    <Card className='w-full max-w-[90vw] sm:max-w-[80vw] xl:max-w-[50vw] shadow-none bg-white/60 backdrop-blur-sm border rounded-xl border-black/10 border-solid px-4 py-6'>
   <CardHeader className='px-4 sm:px-6'>
     <CardTitle className='text-base text-primary/50'>
         Question {currentQuestion + 1} of {questions.length}
@@ -108,8 +108,7 @@ const QuestionForm = () => {
         width: `${((currentQuestion + 1) / questions.length) * 100}%`,
 
 
-      }
-}
+      }}
       />
       </div>
   </CardContent>

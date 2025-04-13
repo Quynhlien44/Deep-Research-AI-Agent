@@ -1,5 +1,5 @@
 "use client"
-import React from 'react'
+import React, {useState} from 'react'
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
@@ -22,7 +22,8 @@ const formSchema = z.object({
 
 const UserInput = () => {
 
-    const {setQuestions, setTopic, isLoading, setIsLoading} = useDeepResearchStore();
+    const [isLoading, setIsLoading] = useState(false);
+    const { setQuestions, setTopic } = useDeepResearchStore();
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -35,14 +36,15 @@ const UserInput = () => {
 async function onSubmit(values: z.infer<typeof formSchema>) {
   setIsLoading(true);
         try{
-            setTopic(values.input);
+
             const response = await fetch("/api/generate-questions", {
                 method: "POST",
                 body: JSON.stringify({topic: values.input})
             });
             const data = await response.json();
+            setTopic(values.input);
             setQuestions(data);
-            console.log(data);
+            form.reset();
         }catch(error){
             console.log(error);
         }finally{
@@ -51,10 +53,7 @@ async function onSubmit(values: z.infer<typeof formSchema>) {
 }
   return (
     <Form {...form}>
-      <form 
-      onSubmit={form.handleSubmit(onSubmit)} 
-      className="flex flex-row items-center justify-center gap-4 w-[50vw]"
-      >
+      <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col sm:flex-row items-center justify-center gap-4 w-[90vw] sm:w-[80vw] xl:w-[50vw]">
       <FormField
         control={form.control}
         name="input"
@@ -64,7 +63,8 @@ async function onSubmit(values: z.infer<typeof formSchema>) {
               <Input 
               placeholder="Enter your research topic" 
               {...field}
-              className="rounded-full w-full flex-1 p-4 py-6 placeholder:text-sm bg-white/60 border-solid shadow-none"
+              className='rounded-full w-full flex-1 p-4 py-4 sm:py-6 placeholder:text-sm bg-white/60 backdrop-blur-sm border-black/10 border-solid shadow-none'
+              disabled={isLoading}
               />
             </FormControl>
             <FormMessage />
@@ -72,15 +72,18 @@ async function onSubmit(values: z.infer<typeof formSchema>) {
         )}
       />
       <Button type="submit" className="rounded-full px-6 cursor-pointer" disabled={isLoading}>
-        {
-          isLoading ? <>
-          <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Generating...
-          </> : 'Submit'
-        }
+        {isLoading ? (
+          <>
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            Generating...
+          </>
+        ) : (
+          'Submit'
+        )}
       </Button>
     </form>
   </Form>
   )
 }
 
-export default UserInput
+export default UserInput;
