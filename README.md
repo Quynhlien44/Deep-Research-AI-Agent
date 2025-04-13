@@ -56,7 +56,12 @@ pnpm install
 
 ### 3. Environment Variables
 
-Create a `.env.local` file in the root directory. Check `.env.example` for required variables.
+Create a `.env.local` file in the root directory.
+`.env.example`
+```bash
+OPENROUTER_API_KEY='add your openrouter api key here'
+EXA_SEARCH_API_KEY='add your exa search api key here'
+```
 
 ### 4. Start Development Server
 
